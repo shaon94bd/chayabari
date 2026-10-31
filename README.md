@@ -58,7 +58,7 @@ cd backend && python manage.py test
 
 ## Deploying to PythonAnywhere
 
-See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. In short: Django serves the built Vue app, so everything runs as a single web app on a single domain (no CORS).
+See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. You can deploy from the browser alone: clone the repo in a PythonAnywhere console and run `bash scripts/pythonanywhere_setup.sh`. The built Vue app is committed in `frontend/dist`, so no Node.js is needed on the server.
 
 ## Project layout
 

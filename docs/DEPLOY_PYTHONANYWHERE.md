@@ -1,12 +1,33 @@
 # Deploying Chayabari on PythonAnywhere
 
+## Quick deploy (browser only, no desktop needed)
+
+The built frontend (`frontend/dist`) is committed to the repo, so you need no Node.js. Everything can be done in a browser, including on a phone.
+
+1. Create a PythonAnywhere account and open a **Bash console** (Consoles tab).
+2. Run:
+   ```bash
+   git clone -b claude/fine-art-exhibition-saas-4cv01t https://github.com/shaon94bd/chayabari.git
+   bash chayabari/scripts/pythonanywhere_setup.sh
+   ```
+   This creates the virtualenv, generates `backend/.env` with a secret key, sets up the SQLite database and static files, and asks you to create an admin account.
+3. **Web** tab → *Add a new web app* → **Manual configuration** → **Python 3.11**. Then fill in the paths the script printed (virtualenv, source code, and the `/static/` and `/media/` static file mappings) and turn on **Force HTTPS**.
+4. Run `bash chayabari/scripts/pythonanywhere_setup.sh` once more. It installs the WSGI file and reloads the site.
+5. Open `https://yourname.pythonanywhere.com`.
+
+To update later: `cd ~/chayabari && git pull && bash scripts/pythonanywhere_setup.sh`.
+
+The rest of this guide covers the manual route and MySQL.
+
+---
+
 Django serves both the API and the built Vue app from one web app (`https://yourname.pythonanywhere.com`).
 
 > **Plan note.** The free tier works for a pilot, but it has limits: 512 MB disk (images are downscaled to 1600 px JPEG on upload, roughly 200–400 KB each), outbound internet restricted to a whitelist, no custom domain, and only one daily scheduled task. For a real paying customer, the $5 "Hacker" plan is the practical minimum because it adds a custom domain and more disk.
 
-## 1. Build the frontend
+## 1. Build the frontend (only if you changed frontend code)
 
-PythonAnywhere consoles have no reliable Node.js, so build on your own machine and upload the result. Either commit `frontend/dist` to a deploy branch, or zip it and upload it:
+`frontend/dist` is committed to the repo. Rebuild it on any machine with Node.js after changing the frontend, then commit the result:
 
 ```bash
 cd frontend
@@ -24,8 +45,6 @@ cd chayabari/backend
 mkvirtualenv --python=/usr/bin/python3.11 chayabari
 pip install -r requirements.txt
 ```
-
-Upload `frontend/dist` to `~/chayabari/frontend/dist` (Files tab, or `unzip dist.zip`).
 
 ## 3. Database
 
@@ -102,7 +121,6 @@ cd ~/chayabari && git pull
 workon chayabari && cd backend
 pip install -r requirements.txt
 python manage.py migrate
-# upload the new frontend/dist, then:
 python manage.py collectstatic --noinput
 ```
 
