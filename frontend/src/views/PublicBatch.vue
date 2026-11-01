@@ -37,7 +37,7 @@ async function onShare() {
 
 <template>
   <GuestBar />
-  <TopBar v-if="auth.loggedIn" :title="batch?.name || 'Batch'"><button class="icon-btn" @click="onShare" aria-label="Share"><Icon name="share" /></button></TopBar>
+  <TopBar v-if="auth.loggedIn" :title="batch?.name || 'Group'"><button class="icon-btn" @click="onShare" aria-label="Share"><Icon name="share" /></button></TopBar>
   <div class="page" v-if="batch">
     <div class="hero" style="aspect-ratio: 16/8" v-if="batch.cover"><img :src="batch.cover" alt="" style="object-fit: cover" /></div>
     <section class="section">

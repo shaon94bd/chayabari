@@ -44,7 +44,7 @@ onMounted(load)
     <div class="tabs">
       <button class="tab" :class="{ on: filter === 'all' }" @click="filter = 'all'">All</button>
       <button class="tab" :class="{ on: filter === 'sale' }" @click="filter = 'sale'">For sale</button>
-      <button v-if="auth.batch" class="tab" :class="{ on: filter === 'batch' }" @click="filter = 'batch'">My batch</button>
+      <button v-if="auth.batch" class="tab" :class="{ on: filter === 'batch' }" @click="filter = 'batch'">My group</button>
       <button v-if="auth.isStudent" class="tab" :class="{ on: filter === 'mine' }" @click="filter = 'mine'">Mine</button>
       <RouterLink class="tab" to="/exhibitions" style="display: grid; place-items: center">Exhibitions →</RouterLink>
     </div>

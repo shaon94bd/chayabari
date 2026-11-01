@@ -17,7 +17,7 @@ const logout = () => { auth.logout(); router.replace('/') }
       <Avatar :user="auth.user" :size="64" />
       <div class="grow">
         <h2 style="margin: 0">{{ auth.user.name }}</h2>
-        <div class="small muted">@{{ auth.user.username }} · {{ { owner: 'Batch owner', member: 'Artist', collector: 'Collector' }[auth.user.role] }}</div>
+        <div class="small muted">@{{ auth.user.username }} · {{ { owner: 'Group owner', member: 'Artist', collector: 'Collector' }[auth.user.role] }}</div>
       </div>
     </div>
     <InactiveBanner />
@@ -45,10 +45,10 @@ const logout = () => { auth.logout(); router.replace('/') }
     </div>
 
     <div v-if="auth.isStudent" class="list">
-      <RouterLink :to="`/b/${auth.batch.slug}`" class="list-item"><Icon name="globe" style="width: 22px" /><span class="grow">Public batch page</span><span class="chev">›</span></RouterLink>
-      <RouterLink to="/batch/members" class="list-item"><Icon name="users" style="width: 22px" /><span class="grow">{{ auth.isOwner ? 'Manage members' : 'Batch members' }}</span><span class="chev">›</span></RouterLink>
-      <RouterLink to="/batch/billing" class="list-item"><Icon name="card" style="width: 22px" /><span class="grow">Subscription</span><span class="chev">›</span></RouterLink>
-      <RouterLink v-if="auth.isOwner" to="/batch/settings" class="list-item"><Icon name="settings" style="width: 22px" /><span class="grow">Batch settings</span><span class="chev">›</span></RouterLink>
+      <RouterLink :to="`/b/${auth.batch.slug}`" class="list-item"><Icon name="globe" style="width: 22px" /><span class="grow">Public group page</span><span class="chev">›</span></RouterLink>
+      <RouterLink to="/group/members" class="list-item"><Icon name="users" style="width: 22px" /><span class="grow">{{ auth.isOwner ? 'Manage members' : 'Group members' }}</span><span class="chev">›</span></RouterLink>
+      <RouterLink to="/group/billing" class="list-item"><Icon name="card" style="width: 22px" /><span class="grow">Subscription</span><span class="chev">›</span></RouterLink>
+      <RouterLink v-if="auth.isOwner" to="/group/settings" class="list-item"><Icon name="settings" style="width: 22px" /><span class="grow">Group settings</span><span class="chev">›</span></RouterLink>
     </div>
 
     <button class="btn ghost block" @click="logout"><Icon name="logout" /> Log out</button>

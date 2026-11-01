@@ -41,6 +41,6 @@ async function submit() {
     </div>
     <div v-if="error" class="form-error">{{ error }}</div>
     <button class="btn block" :disabled="busy">Create account</button>
-    <p class="center small muted">Are you a fine art student? Ask your batch owner for a login.</p>
+    <p class="center small muted">Are you a fine art student? Ask your group owner for a login.</p>
   </form>
 </template>

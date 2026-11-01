@@ -34,9 +34,10 @@ const routes = [
   { path: '/me/edit', component: v('EditProfile'), meta: { auth: true } },
   { path: '/orders', component: v('Orders'), meta: { auth: true, nav: true } },
 
-  { path: '/batch/members', component: v('BatchMembers'), meta: { student: true } },
-  { path: '/batch/billing', component: v('Billing'), meta: { student: true } },
-  { path: '/batch/settings', component: v('BatchSettings'), meta: { owner: true } },
+  { path: '/group/members', component: v('BatchMembers'), meta: { student: true } },
+  { path: '/group/billing', component: v('Billing'), meta: { student: true } },
+  { path: '/group/settings', component: v('BatchSettings'), meta: { owner: true } },
+  { path: '/batch/:page(members|billing|settings)', redirect: (to) => `/group/${to.params.page}` },
 
   { path: '/b/:slug', component: v('PublicBatch'), meta: { nav: true } },
   { path: '/artists/:username', component: v('ArtistProfile'), meta: { nav: true } },

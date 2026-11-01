@@ -36,7 +36,7 @@ onMounted(async () => {
         <div class="small muted">{{ auth.batch?.name || 'Collector' }}</div>
         <h1 style="margin: 0">Hi, {{ auth.user.name.split(' ')[0] }}</h1>
       </div>
-      <RouterLink v-if="auth.batch" :to="`/b/${auth.batch.slug}`" class="icon-btn" aria-label="Batch page"><Icon name="globe" /></RouterLink>
+      <RouterLink v-if="auth.batch" :to="`/b/${auth.batch.slug}`" class="icon-btn" aria-label="Group page"><Icon name="globe" /></RouterLink>
     </header>
 
     <InactiveBanner />
@@ -75,7 +75,7 @@ onMounted(async () => {
 
       <section class="section">
         <div class="section-head">
-          <h2>{{ auth.batch ? 'From your batch' : 'For sale' }}</h2>
+          <h2>{{ auth.batch ? 'From your group' : 'For sale' }}</h2>
           <RouterLink to="/explore">Explore</RouterLink>
         </div>
         <ArtGrid v-if="artworks.length" :items="artworks" />

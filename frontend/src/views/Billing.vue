@@ -65,11 +65,11 @@ async function submit() {
           <div class="price">{{ taka(p.price_bdt) }}</div>
         </div>
         <p class="small muted" style="margin: 0">{{ p.description }}</p>
-        <div class="tiny faint">≈ {{ taka(Math.ceil(p.price_bdt / 30)) }} per student for a 30-member batch</div>
+        <div class="tiny faint">≈ {{ taka(Math.ceil(p.price_bdt / 30)) }} per student for a group of 30</div>
         <button class="btn block" :disabled="!!pending()" @click="paying = p">Pay with bKash / Nagad</button>
       </div>
     </template>
-    <p v-else class="small muted">Only the batch owner can manage the subscription.</p>
+    <p v-else class="small muted">Only the group owner can manage the subscription.</p>
 
     <template v-if="info.history.length">
       <h3 class="section">History</h3>

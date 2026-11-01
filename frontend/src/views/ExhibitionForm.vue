@@ -98,7 +98,7 @@ async function remove() {
           <span class="cap ellipsis">{{ a.title }}</span>
         </button>
       </div>
-      <p v-if="!pool.length" class="small muted">Your batch has no artworks yet.</p>
+      <p v-if="!pool.length" class="small muted">Your group has no artworks yet.</p>
     </div>
 
     <div v-if="error" class="form-error">{{ error }}</div>

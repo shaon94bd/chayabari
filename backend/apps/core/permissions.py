@@ -4,7 +4,7 @@ from rest_framework.permissions import BasePermission
 class IsBatchMember(BasePermission):
     """Student (owner or member) belonging to a batch."""
 
-    message = "Only batch members can do this."
+    message = "Only group members can do this."
 
     def has_permission(self, request, view):
         u = request.user
@@ -14,7 +14,7 @@ class IsBatchMember(BasePermission):
 class HasActiveSubscription(BasePermission):
     """The user's batch must have an active (trial or paid) subscription."""
 
-    message = "Your batch subscription is not active. Ask your batch owner to renew."
+    message = "Your subscription is not active. Ask your group owner to renew."
 
     def has_permission(self, request, view):
         u = request.user
@@ -22,7 +22,7 @@ class HasActiveSubscription(BasePermission):
 
 
 class IsBatchOwner(BasePermission):
-    message = "Only the batch owner can do this."
+    message = "Only the group owner can do this."
 
     def has_permission(self, request, view):
         u = request.user

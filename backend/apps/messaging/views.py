@@ -93,7 +93,7 @@ class MessageListCreateView(APIView):
         if len(body) > 4000:
             return Response({"body": ["Message is too long."]}, status=400)
         if conv.kind == Conversation.Kind.GROUP and not request.user.batch.is_active_subscription:
-            return Response({"detail": "Your batch subscription is not active."}, status=402)
+            return Response({"detail": "Your subscription is not active."}, status=402)
         artwork = None
         if request.data.get("artwork_id"):
             artwork = Artwork.objects.filter(pk=request.data["artwork_id"]).first()

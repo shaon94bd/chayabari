@@ -63,7 +63,7 @@ async function toggleActive(m) {
   } catch (e) { toastError(e) }
 }
 async function makeOwner(m) {
-  if (!confirm(`Make ${m.name} the batch owner? You will become a regular member.`)) return
+  if (!confirm(`Make ${m.name} the group owner? You will become a regular member.`)) return
   try {
     await api.post(`/batch/members/${m.id}/make-owner/`)
     await auth.fetchMe()
@@ -83,13 +83,13 @@ async function startChat(m) {
   <div class="page no-nav stack">
     <InactiveBanner />
     <div v-if="welcome && members.length <= 1" class="card stack">
-      <h2>🎉 Your batch is ready!</h2>
+      <h2>🎉 Your group is ready!</h2>
       <p class="small muted" style="margin: 0">Next: add your classmates. We'll generate a username and password for each — share them privately (WhatsApp works great).</p>
       <button class="btn accent block" @click="adding = true"><Icon name="users" /> Add classmates</button>
     </div>
     <div v-if="sub" class="row between small muted">
       <span>{{ sub.seats_used }} / {{ sub.seats_total }} seats used</span>
-      <RouterLink to="/batch/billing" style="color: var(--accent)">Subscription →</RouterLink>
+      <RouterLink to="/group/billing" style="color: var(--accent)">Subscription →</RouterLink>
     </div>
 
     <div class="list">
@@ -146,7 +146,7 @@ async function startChat(m) {
         <button class="list-item" @click="startChat(selected)"><Icon name="chat" style="width: 20px" /> Message</button>
         <button class="list-item" @click="reset(selected)"><Icon name="key" style="width: 20px" /> Reset password</button>
         <button class="list-item" @click="toggleActive(selected)"><Icon name="users" style="width: 20px" /> {{ selected.is_active ? 'Deactivate (frees a seat)' : 'Reactivate' }}</button>
-        <button v-if="selected.is_active" class="list-item" @click="makeOwner(selected)"><Icon name="settings" style="width: 20px" /> Make batch owner</button>
+        <button v-if="selected.is_active" class="list-item" @click="makeOwner(selected)"><Icon name="settings" style="width: 20px" /> Make group owner</button>
       </div>
     </div>
   </Sheet>

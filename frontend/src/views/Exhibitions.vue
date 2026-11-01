@@ -34,7 +34,7 @@ onMounted(async () => {
     <div v-if="loading" class="spinner" />
     <div v-else class="stack">
       <ExhibitionCard v-for="e in shown" :key="e.id" :ex="e" />
-      <Empty v-if="!shown.length" icon="🏛️" title="No exhibitions" text="Exhibitions curated by batches will show up here." />
+      <Empty v-if="!shown.length" icon="🏛️" title="No exhibitions" text="Exhibitions curated by students will show up here." />
     </div>
   </div>
 </template>

@@ -24,7 +24,7 @@ async function submit() {
   try {
     await api.patch('/batch/', toForm({ ...f, cover: cover.value || undefined }))
     await auth.fetchMe()
-    toast('Batch updated')
+    toast('Group updated')
   } catch (e) {
     error.value = e.message
   } finally {
@@ -34,16 +34,16 @@ async function submit() {
 </script>
 
 <template>
-  <TopBar title="Batch settings" />
+  <TopBar title="Group settings" />
   <form class="page no-nav stack" @submit.prevent="submit">
-    <ImagePicker v-model="cover" :current="current" label="Batch cover photo" ratio="16/9" />
-    <label class="field"><span>Batch name</span><input class="input" v-model="f.name" required /></label>
+    <ImagePicker v-model="cover" :current="current" label="Group cover photo" ratio="16/9" />
+    <label class="field"><span>Group name</span><input class="input" v-model="f.name" required /></label>
     <label class="field"><span>Institution</span><input class="input" v-model="f.institution" required /></label>
     <div class="two">
       <label class="field"><span>Department</span><input class="input" v-model="f.department" /></label>
       <label class="field"><span>Session</span><input class="input" v-model="f.session" /></label>
     </div>
-    <label class="field"><span>About the batch</span><textarea class="input" v-model="f.about" rows="5" /></label>
+    <label class="field"><span>About the group</span><textarea class="input" v-model="f.about" rows="5" /></label>
     <div v-if="error" class="form-error">{{ error }}</div>
     <button class="btn block" :disabled="busy">Save</button>
   </form>

@@ -19,7 +19,7 @@ async function submit() {
   busy.value = true
   try {
     await auth.acceptSession(await api.post('/signup/', f))
-    router.replace('/batch/members?welcome=1')
+    router.replace('/group/members?welcome=1')
   } catch (e) {
     error.value = e.message
   } finally {
@@ -29,16 +29,16 @@ async function submit() {
 </script>
 
 <template>
-  <TopBar title="Start your batch" />
+  <TopBar title="Start your group" />
   <form class="page no-nav stack" @submit.prevent="submit">
     <div>
-      <h1>Create your batch</h1>
+      <h1>Create your group</h1>
       <p class="muted">14 days free. You'll add your classmates next.</p>
     </div>
     <div class="card stack">
-      <h3>Batch</h3>
-      <label class="field"><span>Batch name</span>
-        <input class="input" v-model="f.batch_name" placeholder="e.g. JU Fine Art — Batch 47" required />
+      <h3>Group</h3>
+      <label class="field"><span>Group name</span>
+        <input class="input" v-model="f.batch_name" placeholder="e.g. JU Fine Art 2021-22" required />
       </label>
       <label class="field"><span>University / institute</span>
         <input class="input" v-model="f.institution" placeholder="Jahangirnagar University" required />
@@ -49,7 +49,7 @@ async function submit() {
       </div>
     </div>
     <div class="card stack">
-      <h3>You (batch owner)</h3>
+      <h3>You (group owner)</h3>
       <label class="field"><span>Your name</span><input class="input" v-model="f.display_name" required /></label>
       <label class="field"><span>Username</span>
         <input class="input" v-model="f.username" autocapitalize="none" autocomplete="username" required />
@@ -64,6 +64,6 @@ async function submit() {
       </div>
     </div>
     <div v-if="error" class="form-error">{{ error }}</div>
-    <button class="btn accent block" :disabled="busy">{{ busy ? 'Creating…' : 'Create batch & start trial' }}</button>
+    <button class="btn accent block" :disabled="busy">{{ busy ? 'Creating…' : 'Create group & start trial' }}</button>
   </form>
 </template>

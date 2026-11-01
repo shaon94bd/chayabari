@@ -55,7 +55,7 @@ class Command(BaseCommand):
         if User.objects.filter(username="demo_owner").exists():
             self.stdout.write("Demo data already exists (demo_owner).")
             return
-        batch = Batch.objects.create(name="JU Fine Art — Batch 47", institution="Jahangirnagar University",
+        batch = Batch.objects.create(name="JU Fine Art 2018-19", institution="Jahangirnagar University",
                                      session="2018-19", about="Final-year students of the Department of Fine Art.")
         batch.start_trial()
         owner = User(username="demo_owner", display_name="Rafiq Hasan", role="owner", batch=batch)

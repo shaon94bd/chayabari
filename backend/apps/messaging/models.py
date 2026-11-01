@@ -4,7 +4,7 @@ from django.db import models
 
 class Conversation(models.Model):
     class Kind(models.TextChoices):
-        GROUP = "group", "Batch group"
+        GROUP = "group", "Group chat"
         DIRECT = "direct", "Direct message"
 
     kind = models.CharField(max_length=8, choices=Kind.choices)

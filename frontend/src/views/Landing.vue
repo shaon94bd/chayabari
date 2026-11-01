@@ -1,10 +1,10 @@
 <script setup>
 const logo = import.meta.env.BASE_URL + 'icon.svg'
 const features = [
-  ['🖼️', 'Online exhibitions', 'Curate your batch shows with a shareable public page, before, during and after the physical show.'],
+  ['🖼️', 'Online exhibitions', 'Curate your group shows with a shareable public page, before, during and after the physical show.'],
   ['🏷️', 'Sell artworks', 'Collectors send purchase requests; the artist accepts and arranges payment directly.'],
   ['🔨', 'Live auctions', 'Run timed auctions with minimum increments, a hidden reserve and anti-sniping.'],
-  ['💬', 'Batch chat', 'A group chat for the whole batch plus direct messages with buyers.'],
+  ['💬', 'Group chat', 'A group chat for everyone plus direct messages with buyers.'],
 ]
 </script>
 
@@ -16,11 +16,11 @@ const features = [
     </header>
 
     <section class="hero-block">
-      <span class="badge accent">For fine art student batches</span>
-      <h1 class="display">Your batch's gallery, shop and auction house — in your pocket.</h1>
-      <p class="muted">One student subscribes for the whole batch, adds classmates, and everyone starts showing and selling their work.</p>
+      <span class="badge accent">For fine art students</span>
+      <h1 class="display">Your gallery, shop and auction house — in your pocket.</h1>
+      <p class="muted">One student subscribes for the whole class, adds classmates, and everyone starts showing and selling their work.</p>
       <div class="stack">
-        <RouterLink to="/signup" class="btn accent block">Start a free trial for your batch</RouterLink>
+        <RouterLink to="/signup" class="btn accent block">Start a free trial</RouterLink>
         <RouterLink to="/explore" class="btn ghost block">Browse artworks</RouterLink>
       </div>
     </section>
@@ -35,7 +35,7 @@ const features = [
     <section class="section card">
       <h2>How it works</h2>
       <ol class="muted steps">
-        <li>One student creates the batch account (14-day free trial).</li>
+        <li>One student creates the group account (14-day free trial).</li>
         <li>They add their classmates — Chayabari generates usernames and passwords.</li>
         <li>Share each login privately. Everyone sets their own password on first login.</li>
         <li>Upload artworks, open an exhibition, start selling. Pay by bKash/Nagad when ready.</li>

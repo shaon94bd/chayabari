@@ -30,7 +30,7 @@ async function submit() {
   <TopBar title="Log in" />
   <form class="page no-nav stack" @submit.prevent="submit">
     <h1>Welcome back</h1>
-    <p class="muted">Use the username and password your batch owner gave you.</p>
+    <p class="muted">Use the username and password your group owner gave you.</p>
     <label class="field"><span>Username</span>
       <input class="input" v-model="username" autocomplete="username" autocapitalize="none" required />
     </label>
@@ -40,9 +40,9 @@ async function submit() {
     <div v-if="error" class="form-error">{{ error }}</div>
     <button class="btn block" :disabled="busy">{{ busy ? 'Logging in…' : 'Log in' }}</button>
     <p class="center small muted">
-      New batch? <RouterLink to="/signup"><b>Start your batch</b></RouterLink><br />
+      New here? <RouterLink to="/signup"><b>Start your group</b></RouterLink><br />
       Buying art? <RouterLink to="/register"><b>Create a collector account</b></RouterLink>
     </p>
-    <p class="center tiny faint">Forgot your password? Ask your batch owner to reset it from the Members page.</p>
+    <p class="center tiny faint">Forgot your password? Ask your group owner to reset it from the Members page.</p>
   </form>
 </template>
