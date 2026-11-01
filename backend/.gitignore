@@ -7,3 +7,5 @@ db.sqlite3
 media/
 staticfiles/
 pythonanywhere_wsgi.py
+.secret_key
+.setup.lock
