@@ -6,6 +6,7 @@ All deployment-specific values come from environment variables (or a
 """
 
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -25,10 +26,25 @@ def env_list(name, default=""):
     return [v.strip() for v in os.environ.get(name, default).split(",") if v.strip()]
 
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-insecure-only-for-local-development-change-me")
-DEBUG = env_bool("DJANGO_DEBUG", True)
-ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
-CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "")
+def _secret_key():
+    """Use DJANGO_SECRET_KEY if set; otherwise create one once and keep it in .secret_key (git-ignored)."""
+    if os.environ.get("DJANGO_SECRET_KEY"):
+        return os.environ["DJANGO_SECRET_KEY"]
+    path = BASE_DIR / ".secret_key"
+    if not path.exists():
+        import secrets
+
+        path.write_text(secrets.token_urlsafe(50))
+    return path.read_text().strip()
+
+
+SECRET_KEY = _secret_key()
+# Debug is on only for local development commands (runserver / test) unless set explicitly.
+_DEV_COMMANDS = {"runserver", "test", "seed_demo"}
+DEBUG = env_bool("DJANGO_DEBUG", bool(_DEV_COMMANDS.intersection(sys.argv[1:2])))
+# Works out of the box on PythonAnywhere (yourname.pythonanywhere.com) and locally.
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.pythonanywhere.com")
+CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "https://*.pythonanywhere.com")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
