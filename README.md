@@ -58,7 +58,7 @@ cd backend && python manage.py test
 
 ## Deploying to PythonAnywhere
 
-See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. Deploy the **`backend`** branch, which contains just the Django project with `manage.py` at the top level and the built Vue app in `spa/`. Clone it in a PythonAnywhere console and run `bash pythonanywhere_setup.sh`. No Node.js is needed on the server.
+See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. Deploy the **`backend`** branch, which contains just the Django project with `manage.py` at the top level and the built Vue app in `spa/`. After a one-time `pip install`, updating is just `git pull` + Reload: migrations, static files and the secret key are handled automatically.
 
 ## Project layout
 

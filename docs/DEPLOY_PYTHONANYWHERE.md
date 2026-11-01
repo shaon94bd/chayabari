@@ -1,18 +1,8 @@
 # Deploying Chayabari on PythonAnywhere
 
-## Quick deploy (browser only, no desktop needed)
+## Quick deploy (git pull only)
 
-Deploy the **`backend`** branch. It contains only the Django project (`manage.py` at the top level) plus the built Vue app in `spa/`.
-
-1. Open a **Bash console** on PythonAnywhere and run:
-   ```bash
-   git clone -b backend https://github.com/shaon94bd/chayabari.git ~/chayabari
-   bash ~/chayabari/pythonanywhere_setup.sh
-   ```
-2. **Web** tab (web app on Python 3.11). Set Source code and Working directory to `/home/<you>/chayabari` and Virtualenv to `/home/<you>/.virtualenvs/chayabari`. Add static mappings `/static/` → `/home/<you>/chayabari/staticfiles` and `/media/` → `/home/<you>/chayabari/media`, and turn on Force HTTPS.
-3. Run `bash ~/chayabari/pythonanywhere_setup.sh` again. It writes the WSGI file and reloads the site.
-
-To update later: `cd ~/chayabari && git pull && bash pythonanywhere_setup.sh`.
+Deploy the **`backend`** branch. It contains only the Django project (`manage.py` at the top level) plus the built Vue app in `spa/`. It needs no setup commands: on every start or Reload the app creates its secret key if missing, runs migrations and collects static files. See `backend/README.md` (the README of that branch) for the first-time Web tab settings. After that, an update is `git pull` + Reload.
 
 **Maintainers:** after changing code on the main branch, rebuild the frontend (`cd frontend && npm run build`, which writes to `backend/spa`), commit, then publish:
 `git subtree split --prefix=backend -b backend && git push origin backend`.
