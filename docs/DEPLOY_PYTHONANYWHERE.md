@@ -1,115 +1,67 @@
 # Deploying Chayabari on PythonAnywhere
 
-## Quick deploy (git pull only)
+Chayabari is built for a **default PythonAnywhere web app**: system Python 3.11, no virtualenv and no `pip install`. Every dependency is preinstalled there at the exact version in `requirements.txt` (see `CLAUDE.md`). Deployment uses the **`backend`** branch, which contains only the Django project (`manage.py` at the top level) plus the built Vue app in `spa/`.
 
-Deploy the **`backend`** branch. It contains only the Django project (`manage.py` at the top level) plus the built Vue app in `spa/`. It needs no setup commands: on every start or Reload the app creates its secret key if missing, runs migrations and collects static files. See `backend/README.md` (the README of that branch) for the first-time Web tab settings. After that, an update is `git pull` + Reload.
+On every start or **Reload**, the app sets itself up:
+- creates a secret key once (`.secret_key`, git-ignored),
+- runs with DEBUG off and accepts `*.pythonanywhere.com`,
+- applies database migrations (SQLite `db.sqlite3` by default),
+- collects static files into `staticfiles/`.
 
-**Maintainers:** after changing code on the main branch, rebuild the frontend (`cd frontend && npm run build`, which writes to `backend/spa`), commit, then publish:
-`git subtree split --prefix=backend -b backend && git push origin backend`.
+## First time
 
----
-
-Django serves both the API and the built Vue app from one web app (`https://yourname.pythonanywhere.com`).
-
-> **Plan note.** The free tier works for a pilot, but it has limits: 512 MB disk (images are downscaled to 1600 px JPEG on upload, roughly 200–400 KB each), outbound internet restricted to a whitelist, no custom domain, and only one daily scheduled task. For a real paying customer, the $5 "Hacker" plan is the practical minimum because it adds a custom domain and more disk.
-
-## 1. Build the frontend (only if you changed frontend code)
-
-The built app lives in `backend/spa` and is committed. Rebuild it on any machine with Node.js after changing the frontend, then commit the result:
-
-```bash
-cd frontend
-npm install
-npm run build        # writes backend/spa (assets are referenced under /static/)
-```
-
-## 2. Get the code onto PythonAnywhere
-
-In a **Bash console**:
-
-```bash
-git clone https://github.com/<you>/chayabari.git
-cd chayabari/backend
-mkvirtualenv --python=/usr/bin/python3.11 chayabari
-pip install -r requirements.txt
-```
-
-## 3. Database
-
-**MySQL (recommended).** Open the **Databases** tab, set a password, and create the database `chayabari` (it becomes `yourname$chayabari`). `mysqlclient` is already installed on PythonAnywhere.
-
-SQLite also works for a small pilot. Just leave `DB_ENGINE` unset.
-
-## 4. Environment file
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-Set at least `DJANGO_SECRET_KEY` (generate one with `python -c "import secrets; print(secrets.token_urlsafe(50))"`), `DJANGO_DEBUG=False`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`, the `DB_*` values and your bKash/Nagad numbers.
-
-Then:
-
-```bash
-python manage.py migrate
-python manage.py collectstatic --noinput
-python manage.py createsuperuser
-```
-
-## 5. Web app
-
-**Web** tab → *Add a new web app* → **Manual configuration** → Python 3.11.
-
-- **Virtualenv:** `/home/yourname/.virtualenvs/chayabari`
-- **Source code:** `/home/yourname/chayabari/backend`
-- **WSGI file:** replace its contents with:
-
-```python
-import os, sys
-path = '/home/yourname/chayabari/backend'
-if path not in sys.path:
-    sys.path.insert(0, path)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings'
-from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
-```
-
-- **Static files** (served directly by PythonAnywhere, fast):
-
-| URL | Directory |
-|---|---|
-| `/static/` | `/home/yourname/chayabari/backend/staticfiles` |
-| `/media/` | `/home/yourname/chayabari/backend/media` |
-
-- Turn on **Force HTTPS**.
-
-Click **Reload**. Visit the site. `/admin/` is the platform admin.
-
-## 6. Scheduled task
-
-**Tasks** tab → daily (free tier) or hourly (paid):
-
-```
-/home/yourname/.virtualenvs/chayabari/bin/python /home/yourname/chayabari/backend/manage.py settle_auctions
-```
-
-Auctions also settle the moment anyone opens them after they end, so this task is only a safety net.
-
-## 7. Day-to-day operations
-
-- **Verify payments:** `/admin/batches/payment/` → check the TrxID against your bKash/Nagad statement → select it → action *Verify selected payments*. The batch's plan activates immediately, and any remaining paid time is stacked, not lost.
-- **Plans and prices:** `/admin/batches/plan/`.
-- **Extend a trial or give free time:** edit the batch's subscription inline in `/admin/batches/batch/`.
+1. **Bash console:**
+   ```bash
+   git clone -b backend https://github.com/shaon94bd/chayabari.git ~/chayabari
+   ```
+2. **Web tab** (a web app with Python 3.11):
+   - **Source code** and **Working directory:** `/home/<you>/chayabari`
+   - **Virtualenv:** leave empty
+   - **Static files:** `/static/` → `/home/<you>/chayabari/staticfiles`, and `/media/` → `/home/<you>/chayabari/media`. Remove any other static entries.
+   - **Force HTTPS:** on
+   - **WSGI configuration file:** replace everything with:
+     ```python
+     import sys
+     path = '/home/<you>/chayabari'
+     if path not in sys.path:
+         sys.path.insert(0, path)
+     from config.wsgi import application
+     ```
+3. Press **Reload** and open `https://<you>.pythonanywhere.com`.
 
 ## Updating
 
 ```bash
 cd ~/chayabari && git pull
-workon chayabari && cd backend
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py collectstatic --noinput
 ```
 
-Reload the web app from the Web tab.
+Then press **Reload**.
+
+## Admin account
+
+Create it whenever you like:
+
+```bash
+cd ~/chayabari && python3.11 manage.py createsuperuser
+```
+
+`/admin/` is where you verify bKash/Nagad payments (Payments → select → *Verify selected payments*), edit plans and prices, and extend trials.
+
+## Optional
+
+- **Settings** (payment numbers, trial length, MySQL…): copy `.env.example` to `.env` in `~/chayabari`, edit it, then Reload.
+- **MySQL:** create the database in the Databases tab and set `DB_ENGINE=mysql`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` and `DB_HOST` in `.env`. `mysqlclient` is preinstalled.
+- **Scheduled task** (Tasks tab, daily): `python3.11 /home/<you>/chayabari/manage.py settle_auctions`. This is a safety net; auctions also settle when someone opens them after they end.
+- **Errors:** check the *error log* link on the Web tab.
+
+## Free-tier limits
+
+512 MB disk (images are downscaled to 1600 px on upload), no custom domain, and outbound internet only to whitelisted sites. The $5 plan removes the domain and disk limits.
+
+## For maintainers: publishing the `backend` branch
+
+```bash
+cd frontend && npm run build && cd ..     # if the frontend changed (writes backend/spa); commit it
+git subtree split --prefix=backend -b backend
+git push origin backend
+```

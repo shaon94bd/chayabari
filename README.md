@@ -7,7 +7,7 @@ A mobile-first SaaS for **fine art student batches**. A whole year-batch (say, 3
 - 🔨 **run auctions**: timed auctions with a minimum increment, a hidden reserve price, anti-sniping extension and automatic winner orders
 - 💬 **communicate**: a batch group chat plus direct messages (artist ↔ artist, collector ↔ artist)
 
-**Stack:** Python 3.11 · Django 5.0.9 · Django REST Framework · JWT auth · Vue 3 + Vite + Pinia · SQLite/MySQL. Built to run on **PythonAnywhere**: no websockets, no Celery, no Redis. Chat and auctions use polling.
+**Stack:** Python 3.11 · Django 5.0.9 · Django REST Framework (token auth) · Vue 3 + Vite + Pinia · SQLite/MySQL. Built to run on a **default PythonAnywhere web app** with only its preinstalled packages: no `pip install`, no websockets, no Celery. Chat and auctions use polling. See `CLAUDE.md` for the exact constraints.
 
 ## How tenancy works
 
@@ -58,7 +58,7 @@ cd backend && python manage.py test
 
 ## Deploying to PythonAnywhere
 
-See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. Deploy the **`backend`** branch, which contains just the Django project with `manage.py` at the top level and the built Vue app in `spa/`. After a one-time `pip install`, updating is just `git pull` + Reload: migrations, static files and the secret key are handled automatically.
+See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. Deploy the **`backend`** branch, which contains just the Django project with `manage.py` at the top level and the built Vue app in `spa/`. It uses only packages PythonAnywhere preinstalls for Python 3.11, so no `pip install` is needed. Updating is just `git pull` + Reload: migrations, static files and the secret key are handled automatically.
 
 ## Project layout
 
@@ -82,7 +82,7 @@ docs/                deployment guide
 
 | Area | Endpoints |
 |---|---|
-| Auth | `auth/login/`, `auth/refresh/`, `auth/me/`, `auth/change-password/`, `auth/register/` (collector) |
+| Auth | `auth/login/` (returns `{token}`, send `Authorization: Token …`), `auth/logout/`, `auth/me/`, `auth/change-password/`, `auth/register/` (collector) |
 | Batch | `signup/`, `plans/`, `batch/`, `batch/members/` (GET, POST single or `{members:[…]}`), `batch/members/<id>/`, `…/reset-password/`, `…/make-owner/`, `batch/subscription/`, `batch/subscription/checkout/`, `public/batches/<slug>/` |
 | Gallery | `artworks/` (`?mine=1&batch=&artist=&for_sale=1&q=`), `artworks/<id>/images/`, `exhibitions/` (`?batch=&mine_batch=1`) |
 | Auctions | `auctions/` (`?phase=live|scheduled|ended|open&mine=1`), `auctions/<id>/bid/`, `…/bids/`, `…/cancel/` |

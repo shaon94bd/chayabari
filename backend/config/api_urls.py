@@ -1,6 +1,5 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.accounts import views as accounts
 from apps.auctions.views import AuctionViewSet
@@ -18,7 +17,7 @@ router.register("orders", OrderViewSet, basename="order")
 urlpatterns = [
     # auth & profile
     path("auth/login/", accounts.LoginView.as_view(), name="login"),
-    path("auth/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
+    path("auth/logout/", accounts.LogoutView.as_view(), name="logout"),
     path("auth/me/", accounts.MeView.as_view(), name="me"),
     path("auth/change-password/", accounts.ChangePasswordView.as_view(), name="change-password"),
     path("auth/register/", accounts.CollectorRegisterView.as_view(), name="register-collector"),

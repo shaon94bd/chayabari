@@ -13,7 +13,7 @@ class SignupAndMembersTests(TestCase):
             "batch_name": "JU Fine Art 47", "institution": "Jahangirnagar University",
         }, format="json")
         self.assertEqual(res.status_code, 201, res.data)
-        self.assertIn("access", res.data)
+        self.assertIn("token", res.data)
         owner = User.objects.get(username="rafi")
         self.assertEqual(owner.role, "owner")
         self.assertTrue(owner.batch.is_active_subscription)
@@ -117,3 +117,24 @@ class BillingTests(TestCase):
         self.assertEqual(client_for().get(f"/api/public/batches/{batch.slug}/").status_code, 404)
         # but the owner can still see billing and pay
         self.assertEqual(client_for(owner).get("/api/batch/subscription/").data["is_active"], False)
+
+
+class TokenAuthTests(TestCase):
+    def test_login_token_and_reset_logs_member_out(self):
+        from rest_framework.test import APIClient
+
+        batch, owner = make_batch()
+        m = make_member(batch, "mitu")
+        res = client_for().post("/api/auth/login/", {"username": "mitu", "password": "x-pass-12345"}, format="json")
+        self.assertEqual(res.status_code, 200)
+        c = APIClient()
+        c.credentials(HTTP_AUTHORIZATION=f"Token {res.data['token']}")
+        self.assertEqual(c.get("/api/auth/me/").data["username"], "mitu")
+        m.refresh_from_db()
+        self.assertIsNotNone(m.last_login)
+        client_for(owner).post(f"/api/batch/members/{m.id}/reset-password/")
+        self.assertEqual(c.get("/api/auth/me/").status_code, 401)
+
+    def test_wrong_password(self):
+        res = client_for().post("/api/auth/login/", {"username": "nobody", "password": "x"}, format="json")
+        self.assertEqual(res.status_code, 401)

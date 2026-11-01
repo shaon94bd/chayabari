@@ -11,10 +11,11 @@ There is nothing to configure. On first start the app:
 
 This happens on every **Reload**, so an update is just `git pull` followed by Reload.
 
+It needs **no `pip install`**: every dependency in `requirements.txt` is preinstalled on PythonAnywhere for Python 3.11 at the same version. Use a default web app with Python 3.11 and **no virtualenv**.
+
 **First time only:**
 1. `git clone -b backend https://github.com/shaon94bd/chayabari.git ~/chayabari`
-2. Install the packages into the web app's virtualenv: `pip install -r ~/chayabari/requirements.txt`
-3. Web tab: set Source code and Working directory to `/home/<you>/chayabari`. Add static files `/static/` → `/home/<you>/chayabari/staticfiles` and `/media/` → `/home/<you>/chayabari/media`. Replace the WSGI file with:
+2. Web tab: set Source code and Working directory to `/home/<you>/chayabari`, and leave Virtualenv empty. Add static files `/static/` → `/home/<you>/chayabari/staticfiles` and `/media/` → `/home/<you>/chayabari/media`. Replace the WSGI file with:
    ```python
    import sys
    path = '/home/<you>/chayabari'
@@ -22,8 +23,8 @@ This happens on every **Reload**, so an update is just `git pull` followed by Re
        sys.path.insert(0, path)
    from config.wsgi import application
    ```
-4. Reload.
+3. Reload.
 
-**Admin account (whenever you like):** `cd ~/chayabari && python manage.py createsuperuser`, then go to `/admin/`.
+**Admin account (whenever you like):** `cd ~/chayabari && python3.11 manage.py createsuperuser`, then go to `/admin/`.
 
 **Optional settings:** copy `.env.example` to `.env` (for example for your bKash/Nagad numbers or MySQL), then Reload.

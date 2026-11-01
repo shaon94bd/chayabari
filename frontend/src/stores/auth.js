@@ -13,7 +13,7 @@ export const useAuth = defineStore('auth', {
   actions: {
     async init() {
       authEvents.addEventListener('logout', () => (this.user = null))
-      if (tokens.access) {
+      if (tokens.token) {
         try { await this.fetchMe() } catch { tokens.clear() }
       }
       this.ready = true
@@ -26,12 +26,13 @@ export const useAuth = defineStore('auth', {
       tokens.set(await api.post('/auth/login/', { username: username.trim(), password }))
       return this.fetchMe()
     },
-    async acceptSession({ access, refresh, user }) {
-      tokens.set({ access, refresh })
+    async acceptSession({ token, user }) {
+      tokens.set({ token })
       if (user) this.user = user
       else await this.fetchMe()
     },
     logout() {
+      api.post('/auth/logout/').catch(() => {})
       tokens.clear()
       this.user = null
     },

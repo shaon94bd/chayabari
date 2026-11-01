@@ -1,16 +1,11 @@
-// Tiny fetch wrapper with JWT auth + automatic token refresh.
+// Tiny fetch wrapper with DRF token auth ("Authorization: Token <key>").
 const BASE = import.meta.env.VITE_API_BASE || '/api'
-const ACCESS = 'cb_access'
-const REFRESH = 'cb_refresh'
+const KEY = 'cb_token'
 
 export const tokens = {
-  get access() { return localStorage.getItem(ACCESS) },
-  get refresh() { return localStorage.getItem(REFRESH) },
-  set({ access, refresh }) {
-    if (access) localStorage.setItem(ACCESS, access)
-    if (refresh) localStorage.setItem(REFRESH, refresh)
-  },
-  clear() { localStorage.removeItem(ACCESS); localStorage.removeItem(REFRESH) },
+  get token() { return localStorage.getItem(KEY) },
+  set({ token }) { if (token) localStorage.setItem(KEY, token) },
+  clear() { localStorage.removeItem(KEY) },
 }
 
 export class ApiError extends Error {
@@ -33,27 +28,9 @@ function firstError(data) {
   return ''
 }
 
-let refreshing = null
-async function refreshAccess() {
-  if (!tokens.refresh) return false
-  refreshing ||= fetch(`${BASE}/auth/refresh/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refresh: tokens.refresh }),
-  })
-    .then(async (r) => {
-      if (!r.ok) return false
-      tokens.set(await r.json())
-      return true
-    })
-    .catch(() => false)
-    .finally(() => setTimeout(() => (refreshing = null), 0))
-  return refreshing
-}
-
 export const authEvents = new EventTarget()
 
-async function request(method, path, body, retry = true) {
+async function request(method, path, body) {
   const headers = { Accept: 'application/json' }
   let payload
   if (body instanceof FormData) payload = body
@@ -61,13 +38,13 @@ async function request(method, path, body, retry = true) {
     headers['Content-Type'] = 'application/json'
     payload = JSON.stringify(body)
   }
-  if (tokens.access) headers.Authorization = `Bearer ${tokens.access}`
+  if (tokens.token) headers.Authorization = `Token ${tokens.token}`
   const res = await fetch(BASE + path, { method, headers, body: payload })
-  if (res.status === 401 && retry && tokens.access) {
-    if (await refreshAccess()) return request(method, path, body, false)
+  if (res.status === 401 && tokens.token) {
+    // Token revoked (password changed/reset elsewhere): drop it and retry anonymously.
     tokens.clear()
     authEvents.dispatchEvent(new Event('logout'))
-    return request(method, path, body, false)
+    return request(method, path, body)
   }
   if (res.status === 204) return null
   const isJson = res.headers.get('content-type')?.includes('application/json')
