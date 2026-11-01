@@ -1,0 +1,9 @@
+# This folder is also published on its own as the `backend` branch, so it needs its own ignores.
+__pycache__/
+*.pyc
+.venv/
+.env
+db.sqlite3
+media/
+staticfiles/
+pythonanywhere_wsgi.py

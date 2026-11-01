@@ -117,9 +117,9 @@ USE_I18N = True
 USE_TZ = True
 
 # --- Static & media -----------------------------------------------------
-# The built Vue app (frontend/dist) is collected as static files and the
+# The built Vue app (backend/spa, written by `npm run build`) is collected as static files and the
 # SPA's index.html is served by Django for every non-API route.
-SPA_DIST_DIR = Path(os.environ.get("SPA_DIST_DIR", REPO_DIR / "frontend" / "dist"))
+SPA_DIST_DIR = Path(os.environ.get("SPA_DIST_DIR", BASE_DIR / "spa"))
 STATIC_URL = "/static/"
 STATIC_ROOT = Path(os.environ.get("STATIC_ROOT", BASE_DIR / "staticfiles"))
 STATICFILES_DIRS = [SPA_DIST_DIR] if SPA_DIST_DIR.exists() else []
