@@ -2,22 +2,20 @@
 
 ## Quick deploy (browser only, no desktop needed)
 
-The built frontend (`frontend/dist`) is committed to the repo, so you need no Node.js. Everything can be done in a browser, including on a phone.
+Deploy the **`backend`** branch. It contains only the Django project (`manage.py` at the top level) plus the built Vue app in `spa/`.
 
-1. Create a PythonAnywhere account and open a **Bash console** (Consoles tab).
-2. Run:
+1. Open a **Bash console** on PythonAnywhere and run:
    ```bash
-   git clone -b claude/fine-art-exhibition-saas-4cv01t https://github.com/shaon94bd/chayabari.git
-   bash chayabari/scripts/pythonanywhere_setup.sh
+   git clone -b backend https://github.com/shaon94bd/chayabari.git ~/chayabari
+   bash ~/chayabari/pythonanywhere_setup.sh
    ```
-   This creates the virtualenv, generates `backend/.env` with a secret key, sets up the SQLite database and static files, and asks you to create an admin account.
-3. **Web** tab → *Add a new web app* → **Manual configuration** → **Python 3.11**. Then fill in the paths the script printed (virtualenv, source code, and the `/static/` and `/media/` static file mappings) and turn on **Force HTTPS**.
-4. Run `bash chayabari/scripts/pythonanywhere_setup.sh` once more. It installs the WSGI file and reloads the site.
-5. Open `https://yourname.pythonanywhere.com`.
+2. **Web** tab (web app on Python 3.11). Set Source code and Working directory to `/home/<you>/chayabari` and Virtualenv to `/home/<you>/.virtualenvs/chayabari`. Add static mappings `/static/` → `/home/<you>/chayabari/staticfiles` and `/media/` → `/home/<you>/chayabari/media`, and turn on Force HTTPS.
+3. Run `bash ~/chayabari/pythonanywhere_setup.sh` again. It writes the WSGI file and reloads the site.
 
-To update later: `cd ~/chayabari && git pull && bash scripts/pythonanywhere_setup.sh`.
+To update later: `cd ~/chayabari && git pull && bash pythonanywhere_setup.sh`.
 
-The rest of this guide covers the manual route and MySQL.
+**Maintainers:** after changing code on the main branch, rebuild the frontend (`cd frontend && npm run build`, which writes to `backend/spa`), commit, then publish:
+`git subtree split --prefix=backend -b backend && git push origin backend`.
 
 ---
 
@@ -27,12 +25,12 @@ Django serves both the API and the built Vue app from one web app (`https://your
 
 ## 1. Build the frontend (only if you changed frontend code)
 
-`frontend/dist` is committed to the repo. Rebuild it on any machine with Node.js after changing the frontend, then commit the result:
+The built app lives in `backend/spa` and is committed. Rebuild it on any machine with Node.js after changing the frontend, then commit the result:
 
 ```bash
 cd frontend
 npm install
-npm run build        # creates frontend/dist (assets are referenced under /static/)
+npm run build        # writes backend/spa (assets are referenced under /static/)
 ```
 
 ## 2. Get the code onto PythonAnywhere

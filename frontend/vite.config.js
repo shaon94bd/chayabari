@@ -6,6 +6,8 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? '/static/' : '/',
   plugins: [vue()],
+  // Built straight into the Django project so the backend folder is self-contained.
+  build: { outDir: '../backend/spa', emptyOutDir: true },
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   server: {
     port: 5173,

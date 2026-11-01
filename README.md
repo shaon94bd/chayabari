@@ -58,7 +58,7 @@ cd backend && python manage.py test
 
 ## Deploying to PythonAnywhere
 
-See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. You can deploy from the browser alone: clone the repo in a PythonAnywhere console and run `bash scripts/pythonanywhere_setup.sh`. The built Vue app is committed in `frontend/dist`, so no Node.js is needed on the server.
+See **[docs/DEPLOY_PYTHONANYWHERE.md](docs/DEPLOY_PYTHONANYWHERE.md)**. Deploy the **`backend`** branch, which contains just the Django project with `manage.py` at the top level and the built Vue app in `spa/`. Clone it in a PythonAnywhere console and run `bash pythonanywhere_setup.sh`. No Node.js is needed on the server.
 
 ## Project layout
 
