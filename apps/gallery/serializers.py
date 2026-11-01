@@ -119,7 +119,7 @@ class ExhibitionDetailSerializer(ExhibitionSerializer):
         valid = set(Artwork.objects.filter(batch=batch, id__in=ids).values_list("id", flat=True))
         bad = [i for i in ids if i not in valid]
         if bad:
-            raise serializers.ValidationError(f"Artworks not in your batch: {bad}")
+            raise serializers.ValidationError(f"Artworks not in your group: {bad}")
         return list(dict.fromkeys(ids))
 
     @transaction.atomic

@@ -6,8 +6,8 @@ from apps.core.images import shrink_image_field
 
 class User(AbstractUser):
     class Role(models.TextChoices):
-        OWNER = "owner", "Batch owner"
-        MEMBER = "member", "Batch member"
+        OWNER = "owner", "Group owner"
+        MEMBER = "member", "Group member"
         COLLECTOR = "collector", "Collector / buyer"
 
     role = models.CharField(max_length=16, choices=Role.choices, default=Role.COLLECTOR)

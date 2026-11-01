@@ -126,7 +126,7 @@ class ExhibitionViewSet(viewsets.ModelViewSet):
     def _check_editor(self, exhibition):
         u = self.request.user
         if exhibition.batch_id != u.batch_id or (exhibition.created_by_id != u.id and u.role != "owner"):
-            raise PermissionDenied("Only the curator or batch owner can change this exhibition.")
+            raise PermissionDenied("Only the curator or group owner can change this exhibition.")
 
     def perform_create(self, serializer):
         serializer.save(batch=self.request.user.batch, created_by=self.request.user)

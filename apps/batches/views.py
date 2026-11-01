@@ -162,7 +162,7 @@ class PublicBatchView(APIView):
     def get(self, request, slug):
         batch = get_object_or_404(Batch, slug=slug)
         if not batch.is_active_subscription:
-            return Response({"detail": "This batch's page is currently unavailable."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "This page is currently unavailable."}, status=status.HTTP_404_NOT_FOUND)
         members = batch.members.filter(is_active=True).annotate(
             artwork_count=Count("artworks", filter=Q(artworks__is_published=True))
         ).order_by("display_name", "username")

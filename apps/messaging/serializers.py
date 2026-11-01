@@ -40,7 +40,7 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     def get_title(self, obj):
         if obj.kind == Conversation.Kind.GROUP:
-            return obj.title or "Batch group"
+            return obj.title or "Group chat"
         other = self._other(obj)
         return other.name if other else "Conversation"
 

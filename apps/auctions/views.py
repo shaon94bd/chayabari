@@ -92,7 +92,7 @@ class AuctionViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
         if auction.artwork.artist_id != request.user.id and not (
             request.user.role == "owner" and auction.batch_id == request.user.batch_id
         ):
-            raise PermissionDenied("Only the artist or batch owner can cancel.")
+            raise PermissionDenied("Only the artist or group owner can cancel.")
         if auction.bids.exists():
             return Response({"detail": "Auctions with bids cannot be cancelled."}, status=400)
         auction.is_cancelled = True
