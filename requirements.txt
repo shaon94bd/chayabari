@@ -1,9 +1,10 @@
+# Every package below is preinstalled on PythonAnywhere for Python 3.11
+# (system image "innit"), at exactly these versions, so a default PythonAnywhere
+# Django web app needs no `pip install`. Keep it that way: see CLAUDE.md.
 Django==5.0.9
 djangorestframework==3.15.2
-djangorestframework-simplejwt==5.3.1
-PyJWT==2.9.0
-django-cors-headers==4.4.0
+django-cors-headers==4.6.0
 Pillow==10.4.0
 python-dotenv==1.0.1
-# On PythonAnywhere with MySQL, mysqlclient is already installed system-wide.
-# Elsewhere: pip install mysqlclient
+# MySQL (optional) — also preinstalled on PythonAnywhere:
+# mysqlclient==2.2.6

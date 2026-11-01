@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from apps.accounts.models import User
 from apps.accounts.serializers import MeSerializer
 from apps.accounts.utils import generate_password
-from apps.accounts.views import tokens_for
+from apps.accounts.views import rotate_token, tokens_for
 from apps.core.permissions import IsBatchMember, IsBatchOwner
 
 from .models import Batch, Plan
@@ -107,6 +107,7 @@ class MemberResetPasswordView(APIView):
         member.set_password(password)
         member.must_change_password = True
         member.save()
+        rotate_token(member)  # logs the member out of any device using the old password
         return Response(CredentialSerializer((member, password)).data)
 
 

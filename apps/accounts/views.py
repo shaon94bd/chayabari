@@ -5,8 +5,9 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth.models import update_last_login
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from .models import User
 from .serializers import (
@@ -18,13 +19,38 @@ from .serializers import (
 
 
 def tokens_for(user):
-    refresh = RefreshToken.for_user(user)
-    return {"refresh": str(refresh), "access": str(refresh.access_token)}
+    token, _ = Token.objects.get_or_create(user=user)
+    return {"token": token.key}
 
 
-class LoginView(TokenObtainPairView):
+def rotate_token(user):
+    """Invalidate every existing session of this user (e.g. after a password change)."""
+    Token.objects.filter(user=user).delete()
+    return tokens_for(user)
+
+
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "login"
+
+    def post(self, request):
+        s = AuthTokenSerializer(data=request.data, context={"request": request})
+        if not s.is_valid():
+            return Response({"detail": "Wrong username or password."}, status=status.HTTP_401_UNAUTHORIZED)
+        user = s.validated_data["user"]
+        update_last_login(None, user)
+        return Response(tokens_for(user))
+
+
+class LogoutView(APIView):
+    """Log out everywhere: deletes the user's token."""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        Token.objects.filter(user=request.user).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class MeView(generics.RetrieveUpdateAPIView):
@@ -46,7 +72,7 @@ class ChangePasswordView(APIView):
         user.set_password(s.validated_data["new_password"])
         user.must_change_password = False
         user.save()
-        return Response(tokens_for(user))
+        return Response(rotate_token(user))
 
 
 class CollectorRegisterView(generics.CreateAPIView):
